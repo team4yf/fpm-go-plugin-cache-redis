@@ -51,5 +51,6 @@ func init() {
 		}
 
 		app.SetCacher(rds.NewRedisCache(options.Prefix, cli))
+		app.SetDistributeLocker(rds.NewRedisLocker(cli))
 	})
 }

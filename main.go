@@ -24,6 +24,17 @@ func main() {
 		}
 
 	}
+	l, exists := app.GetDistributeLocker()
+	if exists {
+		if l.GetLock("a", 10*time.Second) {
+			app.Logger.Debugf("getLocker")
+			time.Sleep(3 * time.Second)
+			if err := l.ReleaseLock("a"); err == nil {
+				app.Logger.Debugf("releaseLocker")
+			}
+		}
+
+	}
 	app.Run()
 
 }

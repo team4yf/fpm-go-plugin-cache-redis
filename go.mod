@@ -15,8 +15,9 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
+	github.com/stretchr/testify v1.6.1
 	github.com/team4yf/fpm-iot-go-middleware v0.0.0-20200824151924-0d67fd073eb9
-	github.com/team4yf/yf-fpm-server-go v0.1.9
+	github.com/team4yf/yf-fpm-server-go v0.1.11
 	golang.org/x/sys v0.0.0-20200824131525-c12d262b63d8 // indirect
 	gopkg.in/ini.v1 v1.60.1 // indirect
 )

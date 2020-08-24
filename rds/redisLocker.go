@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/team4yf/fpm-iot-go-middleware/pkg/cache"
+	"github.com/team4yf/yf-fpm-server-go/pkg/cache"
 )
 
 type redisLocker struct {

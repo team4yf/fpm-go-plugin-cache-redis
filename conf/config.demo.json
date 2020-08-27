@@ -1,8 +1,4 @@
 {
-    "mode": "release",
-    "domain": "",
-    "version": "",
-    "name": "fpm-server",
     "redis": {
         "addr":"localhost:6379",
         "passwd":"admin123",

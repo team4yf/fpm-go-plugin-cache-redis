@@ -16,7 +16,7 @@ import (
 var (
 	errNotDoneYet = errors.New("Not Done Yet!")
 	errNoData     = errors.New("Find Nothing!")
-	timeoutCtx    = context.Background()
+	TimeoutCtx    = context.Background()
 	Cache         cache.Cache
 )
 
@@ -41,7 +41,7 @@ func (r *redisCache) PaddingKey(key string) string {
 }
 
 func (r *redisCache) SetString(key, val string, duration time.Duration) error {
-	if err := r.cli.Set(timeoutCtx, r.PaddingKey(key), val, duration).Err(); err != nil {
+	if err := r.cli.Set(TimeoutCtx, r.PaddingKey(key), val, duration).Err(); err != nil {
 		return errs.Wrap(err, "set data to redis set err")
 	}
 	return nil
@@ -51,7 +51,7 @@ func (r *redisCache) SetObject(key string, val interface{}, duration time.Durati
 	if err != nil {
 		return errs.Wrap(err, "marshal data err")
 	}
-	if err = r.cli.Set(timeoutCtx, r.PaddingKey(key), string(raw), duration).Err(); err != nil {
+	if err = r.cli.Set(TimeoutCtx, r.PaddingKey(key), string(raw), duration).Err(); err != nil {
 		return errs.Wrap(err, "set data to redis set err")
 	}
 	return nil
@@ -62,14 +62,14 @@ func (r *redisCache) Set(key string, val interface{}, duration time.Duration) er
 }
 
 func (r *redisCache) SetInt(key string, val int64, duration time.Duration) error {
-	if err := r.cli.Set(timeoutCtx, r.PaddingKey(key), val, duration).Err(); err != nil {
+	if err := r.cli.Set(TimeoutCtx, r.PaddingKey(key), val, duration).Err(); err != nil {
 		return errs.Wrap(err, "set data to redis set err")
 	}
 	return nil
 }
 
 func (r *redisCache) GetString(key string) (val string, err error) {
-	val, err = r.cli.Get(timeoutCtx, r.PaddingKey(key)).Result()
+	val, err = r.cli.Get(TimeoutCtx, r.PaddingKey(key)).Result()
 	if err != nil {
 		if err == redis.Nil {
 			err = nil
@@ -124,7 +124,7 @@ func (r *redisCache) GetMap(key string) (map[string]interface{}, error) {
 	return obj, nil
 }
 func (r *redisCache) IsSet(key string) (bool, error) {
-	cmd := r.cli.Exists(timeoutCtx, r.PaddingKey(key))
+	cmd := r.cli.Exists(TimeoutCtx, r.PaddingKey(key))
 	value, err := cmd.Result()
 	if err != nil {
 		return false, err
@@ -133,7 +133,7 @@ func (r *redisCache) IsSet(key string) (bool, error) {
 }
 
 func (r *redisCache) Remove(key string) (bool, error) {
-	err := r.cli.Del(timeoutCtx, r.PaddingKey(key)).Err()
+	err := r.cli.Del(TimeoutCtx, r.PaddingKey(key)).Err()
 	if err != nil {
 		return false, err
 	}
@@ -141,7 +141,7 @@ func (r *redisCache) Remove(key string) (bool, error) {
 }
 
 func (r *redisCache) SafetyIncr(key string, step int64) (bool, error) {
-	err := r.cli.IncrBy(timeoutCtx, r.PaddingKey(key), step).Err()
+	err := r.cli.IncrBy(TimeoutCtx, r.PaddingKey(key), step).Err()
 	if err != nil {
 		return false, err
 	}

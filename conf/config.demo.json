@@ -1,5 +1,6 @@
 {
     "redis": {
+        "prefix": "fpm-test",
         "addr":"localhost:6379",
         "passwd":"admin123",
         "db": 1,

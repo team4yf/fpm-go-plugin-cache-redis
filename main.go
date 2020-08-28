@@ -35,6 +35,20 @@ func main() {
 		}
 
 	}
+
+	app.Execute("redis.publish", &fpm.BizParam{
+		"topic":   "foo",
+		"payload": "bar",
+	})
+
+	app.Execute("redis.subscribe", &fpm.BizParam{
+		"topic": "foo",
+	})
+
+	app.Execute("redis.unsubscribe", &fpm.BizParam{
+		"topic": []string{"foo", "bar"},
+	})
+
 	app.Run()
 
 }

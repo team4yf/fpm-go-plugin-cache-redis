@@ -86,10 +86,17 @@ func init() {
 			return
 		}
 
-		subscribe := func(events interface{}) {
+		subscribe := func(events interface{}, init bool) {
 			locker.GetLock("sync_to_subscribe", 10*time.Second)
 			defer locker.ReleaseLock("sync_to_subscribe")
-			subTopics := getSubscribeTopics()
+			var subTopics []string
+			// the first time to subscribe
+			if init {
+				subTopics = make([]string, 0)
+			} else {
+				subTopics = getSubscribeTopics()
+			}
+
 			topics := make([]string, 0)
 			switch events.(type) {
 			case string:
@@ -122,7 +129,7 @@ func init() {
 			}
 
 			go func() {
-				defer sub.Close()
+				// defer sub.Close()
 				for {
 					msg, _ := sub.ReceiveMessage(rds.TimeoutCtx)
 					app.Publish("#redis/receive", map[string]interface{}{
@@ -158,7 +165,7 @@ func init() {
 					if sub != nil {
 						sub.Unsubscribe(rds.TimeoutCtx, subTopics...)
 					}
-					subscribe(finalTopics)
+					subscribe(finalTopics, false)
 				}
 			}
 			if err := cacher.SetObject(storedKey, &finalTopics, 0); err != nil {
@@ -180,7 +187,7 @@ func init() {
 				panic(err)
 			}
 			app.Logger.Debugf("fetch __subscribe__topics from redis: %v", topics)
-			subscribe(topics)
+			subscribe(topics, true)
 		}
 
 		bizModule := make(fpm.BizModule, 0)
@@ -191,7 +198,7 @@ func init() {
 		//    should make sure the topics are seted, there could not contain same key.
 		bizModule["subscribe"] = func(param *fpm.BizParam) (data interface{}, err error) {
 			topic := (*param)["topic"]
-			subscribe(topic)
+			subscribe(topic, false)
 			data = 1
 			return
 		}

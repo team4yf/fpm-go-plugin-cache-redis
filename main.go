@@ -36,18 +36,21 @@ func main() {
 
 	}
 
+	app.Subscribe("#redis/receive", func(_ string, data interface{}) {
+		app.Logger.Debugf("receive redis message %v", data)
+	})
+	app.Execute("redis.subscribe", &fpm.BizParam{
+		"topic": "foo",
+	})
+	time.Sleep(5 * time.Second)
 	app.Execute("redis.publish", &fpm.BizParam{
 		"topic":   "foo",
 		"payload": "bar",
 	})
 
-	app.Execute("redis.subscribe", &fpm.BizParam{
-		"topic": "foo",
-	})
-
-	app.Execute("redis.unsubscribe", &fpm.BizParam{
-		"topic": []string{"foo", "bar"},
-	})
+	// app.Execute("redis.unsubscribe", &fpm.BizParam{
+	// 	"topic": []string{"foo", "bar"},
+	// })
 
 	app.Run()
 

@@ -1,11 +1,12 @@
 package main
 
 import (
+	"context"
 	"time"
 
 	"github.com/team4yf/yf-fpm-server-go/fpm"
 
-	_ "github.com/team4yf/fpm-go-plugin-cache-redis/plugin"
+	"github.com/team4yf/fpm-go-plugin-cache-redis/plugin"
 )
 
 func main() {
@@ -41,17 +42,17 @@ func main() {
 	})
 	app.Execute("redis.subscribe", &fpm.BizParam{
 		"topic": "foo",
-	})
+	}, nil)
 	time.Sleep(5 * time.Second)
 	app.Execute("redis.publish", &fpm.BizParam{
 		"topic":   "foo",
 		"payload": "bar",
-	})
+	}, nil)
 
-	// app.Execute("redis.unsubscribe", &fpm.BizParam{
-	// 	"topic": []string{"foo", "bar"},
-	// })
-
+	cli := plugin.GetClient()
+	if cmd := cli.LPush(context.Background(), "test", "abc", "bcd"); cmd.Err() != nil {
+		panic(cmd.Err())
+	}
 	app.Run()
 
 }

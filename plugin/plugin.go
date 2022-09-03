@@ -9,6 +9,10 @@ import (
 	"github.com/team4yf/yf-fpm-server-go/fpm"
 )
 
+var (
+	cli *redis.Client
+)
+
 //Options the redis config
 type Options struct {
 	Prefix string
@@ -25,6 +29,10 @@ func contains(arr []string, ele string) bool {
 		}
 	}
 	return false
+}
+
+func GetClient() *redis.Client {
+	return cli
 }
 
 func init() {
@@ -52,7 +60,7 @@ func init() {
 			DB:       options.DB,
 			PoolSize: options.Pool,
 		}
-		cli := redis.NewClient(redisOptions)
+		cli = redis.NewClient(redisOptions)
 		if _, err := cli.Ping(rds.TimeoutCtx).Result(); err != nil {
 			app.Logger.Errorf("Redis Cant Connect! Cause: %v", err)
 			panic(err)

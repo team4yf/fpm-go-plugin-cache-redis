@@ -8,16 +8,13 @@
 
 ### Config
 
-```json
-{
-    "redis": {
-        "prefix": "fpm-test",
-        "addr":"localhost:6379",
-        "passwd":"admin123",
-        "db": 1,
-        "pool": 10
-    }
-}
+```yaml
+redis:
+  prefix: test
+  addr: localhost:6379
+  passwd:
+  db: 1
+  pool: 10
 ```
 
 ### Usage
@@ -99,8 +96,17 @@ func main(){
 		p := body["payload"].([]byte)
 		log.Debugf("topic: %s, payload: %+v", t, (string)(p))
 	})
-   
 	app.Run()
 }
+
+```
+
+3. Get original redis client
+
+```golang
+import "github.com/team4yf/fpm-go-plugin-cache-redis/plugin"
+
+cli := plugin.GetClient()
+// TODO: do something here
 
 ```
